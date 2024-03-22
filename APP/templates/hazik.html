@@ -10,13 +10,7 @@
     {% include "inner_head.html" %}
 
     {# CSS-fájlok #}
-    <link rel="stylesheet" href="{% static 'css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <link rel="stylesheet" href="{% static 'css/hazik.css' %}">
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
-    <link rel="stylesheet" href="{% static 'css/colors.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mobile2.css' %}">
+    {% include "csshelpers/app_essentials.html" %}
 
     {# JS #}
 
