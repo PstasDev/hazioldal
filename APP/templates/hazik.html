@@ -20,48 +20,8 @@
 
     {# JS #}
 
-    <script>
-    window.onload = function(){
-        if (window.location.href.split("/").at(-3) == "hf")
-        {
-            if (window.location.href.split("/").at(-2) == "uj")
-            {
-                $('#sajat-todo').addClass("active-sajat");
-            }
-            if (window.location.href.split("/").at(-2) == "biral")
-            {
-                $('#sajat-biral').addClass("active-sajat");
-            }
-            if (window.location.href.split("/").at(-2) == "kesz")
-            {
-                $('#sajat-kesz').addClass("active-sajat");
-            }
-        }
-        if (window.location.href.split("/").at(-3) == "mo")
-        {
-            if (window.location.href.split("/").at(-2) == "uj")
-            {
-                $('#mentor-fuggo').addClass("active-mentor");
-            }
-            if (window.location.href.split("/").at(-2) == "biral")
-            {
-                $('#mentor-todo').addClass("active-mentor");
-            }
-            if (window.location.href.split("/").at(-2) == "kesz")
-            {
-                $('#mentor-kesz').addClass("active-mentor");
-            }
-        }
-
-
-       
-    }
-  </script>
-
-    
 </head>
 <body>
-
 
     {% include "header.html" %}
     <div class="bg">

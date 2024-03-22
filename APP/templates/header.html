@@ -1,45 +1,33 @@
 {% load auth_extras %}
-<header>
-    {# NAV BAR #}
-    <div class="grid bal">
-        <nav id="nav1">
-            <ul>
-                {% if request.user|has_group:"tanar" %}
-                    <li><a href="/naplo/" class="adminhover">Napló</a></li>
-                    <li><a href="/hazioldal/adminisztracio/" class="adminhover">Admin</a></li>
-                {% else %}
-                    <li><a href="/hazioldal/mentoralt/ellenorzes/" id="sajat-todo" class="sajathover">Hf</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </div>
-    <div class="grid fokep">
-        <a href="/"><img src="https://i.imgur.com/7XcmfAQ.png" alt="F-es logo"></a>
-    </div>
-    <div class="grid kozep">
-        <nav id="nav2"> 
-            <ul>
-                {% if request.user|has_group:"tanar" %}
-                    <li><a href="/hazioldal/tanar/kituz/" class="adminhover">Kitűzés</a></li>
-                    <li><a href="/hazioldal/tanar/ellenorzes/" class="adminhover">Ellenőrzés</a></li>
-                {% else %}
-                    <li><a href="/hazioldal/mentor/ellenorzes/" id="mentor-fuggo" class="mentorhover">Mentorálás</a></li>
-                {% endif %}
-            </ul>
-        </nav> 
-    </div>
-    <div class="grid jobb">
-        <nav> 
-            <ul class="last">
-                <li class="haladekkerelmektext"><a href="/hazioldal/haladek/" title="Haladékkérelmek"><img src="https://imgur.com/lYTzc8a.png" alt="Kérelmek" class="clock-icon iconmenu"></a></li>
-                <li class="ellenorzonaplotext"><a href="/naplo/" title="Ellenőrző/Napló"><img src="https://imgur.com/cvepk86.png" alt="Ellenőrző/Napló" class="notebook-icon iconmenu"></a></li>
-                <li class="fioktext"><a href="/hazioldal/fiok/" title="Fiók"><img src="https://i.imgur.com/eb504Mu.png" alt="Fiók" class="profile-icon iconmenu"></a></li>
-            </ul>
-        </nav> 
-        <div class="mobilview">
-            <ul id="navToggle" class="slide open" onclick="OpenMenu()">
-                <li></li><li></li><li></li>
-            </ul>
+
+<header class="fixed top-0 w-full z-50">
+    <div class="navbar bg-base-300 p-0 min-h-0">
+        <div class="navbar-start"></div>
+        <div class="navbar-center">
+            {% if request.user|has_group:"tanar" %}
+                <a href="/naplo/" class="btn btn-ghost text-l hidden md:flex">Napló</a>
+                <a href="/hazioldal/adminisztracio/" class="btn btn-ghost text-l hidden md:flex">Admin</a>
+            {% else %}
+                <a href="/hazioldal/mentoralt/ellenorzes/" class="btn btn-ghost text-l hidden md:flex">Házik</a>
+            {% endif %}
+            <a href="/"><img src="https://i.imgur.com/7XcmfAQ.png" alt="F-es logo"></a>
+            {% if request.user|has_group:"tanar" %}
+                <a href="/hazioldal/tanar/kituz/" class="btn btn-ghost text-l hidden md:flex">Kitűzés</a>
+                <a href="/hazioldal/tanar/ellenorzes/" class="btn btn-ghost text-l hidden md:flex">Ellenőrzés</a>
+            {% else %}
+                <a href="/hazioldal/mentor/ellenorzes/" class="btn btn-ghost text-l hidden md:flex hidden md:flex">Mentorálás</a>
+            {% endif %}
+        </div>
+        <div class="navbar-end">
+            <a href="/hazioldal/haladek/" class="btn btn-ghost btn-circle hidden md:flex">
+                <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+            </a>
+            <a href="/naplo/" class="btn btn-ghost btn-circle hidden md:flex">
+                <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M11 4.717c-2.286-.58-4.16-.756-7.045-.71A1.99 1.99 0 0 0 2 6v11c0 1.133.934 2.022 2.044 2.007 2.759-.038 4.5.16 6.956.791V4.717Zm2 15.081c2.456-.631 4.198-.829 6.956-.791A2.013 2.013 0 0 0 22 16.999V6a1.99 1.99 0 0 0-1.955-1.993c-2.885-.046-4.76.13-7.045.71v15.081Z" clip-rule="evenodd"/></svg>
+            </a>
+            <a href="/hazioldal/fiok/" class="btn btn-ghost btn-circle hidden md:flex">
+                <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+            </a>
         </div>
     </div>
 </header>

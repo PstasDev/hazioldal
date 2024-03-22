@@ -1,11 +1,18 @@
 {% load static %}
-<script src="{% static 'js/footer.js' %}"></script>
 
-<link rel="stylesheet" href="{% static 'css/modal.css' %}">
-{% include "modals/one_button_modal.html" %}
-
-<footer>
-    <div class="credits">
-        <span onclick="openCreditsModal()">Credits</span>
-    </div>
+<footer class="footer footer-center p-2 bg-base-300 text-base-content fixed bottom-0 w-full">
+    <aside>
+        <button class="btn btn-ghost btn-xs" onclick="credits_modal.showModal()">Credits</button>
+        <dialog id="credits_modal" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Credits</h3>
+              <p class="py-4">Molnár Attila, Hargitai Bence, Balla Botond</p>
+              <div class="modal-action">
+                <form method="dialog">
+                  <button class="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+    </aside>
 </footer>

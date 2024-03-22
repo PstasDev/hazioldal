@@ -32,32 +32,11 @@ async function update_git() {
 }
 
 function openModal(title, message) {
-    var modal = document.getElementById('modal');
-    var modalTitle = document.getElementById('modal-title');
-    var modalMessage = document.getElementById('modal-message');
+    gitmodalTitle.textContent = title;
+    gitmodalMessage.textContent = message;
 
-    modalTitle.textContent = title;
-    modalMessage.textContent = message;
-    modal.style.display = 'block';
-    document.getElementById('modal-overlay').style.display = 'block';
-    document.body.classList.add('modal-open');
+    git_username_updated.showModal();
 }
-
-document.addEventListener('click', function(event) {
-    if (event.target && event.target.id === 'close-modal-btn') {
-        closeModal();
-    }
-});
-
-function closeModal() {
-    var modal = document.getElementById('modal');
-    var overlay = document.getElementById('modal-overlay');
-
-    modal.style.display = 'none';
-    overlay.style.display = 'none';
-    document.body.classList.remove('modal-open');
-}
-
 
 function CommitChange(){
     var elem = document.getElementById('check1');

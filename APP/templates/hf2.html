@@ -1,0 +1,157 @@
+{% load static %}
+{% load repofilterek %}
+
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    {% include "inner_head.html" %}
+
+    {% comment %} JS fájlok {% endcomment %}
+    <script src="{% static 'js/general.js' %}"></script>
+    <script src="{% static 'js/fetch.js' %}"></script>
+    <script src="{% static 'js/hf.js' %}"></script>
+
+    <title>{{ hf.kituzes.feladat.nev }}</title>
+
+</head>
+<body onload="betolt()">
+    {% include "header.html" %}
+
+    <main class="flex flex-col gap-3 h-screen items-center justify-center mt-10 mb-10">
+        <div class="card w-full sm:w-4/5 md:w-6/12 bg-base-200 shadow-xl">
+            <div class="card-body">
+                <ul class="steps">
+                    <li class="step step-info">Repo belinkelése</li>
+                    <li class="step {% if hf.allapot == "NINCS_MO" or hf.allapot == "NINCS_BIRALAT" or hf.allapot == "VAN_NEGATIV_BIRALAT" or hf.allapot == "MINDEN_BIRALAT_POZITIV"%} step-info {% endif %}">Megoldás beküldése</li>
+                    <li class="step {% if hf.allapot == "NINCS_BIRALAT"%} step-warning {% elif hf.allapot == "VAN_NEGATIV_BIRALAT" %} step-error {% elif hf.allapot == "MINDEN_BIRALAT_POZITIV" %} step-success {% endif %}">{% if hf.allpot == "VAN_NEGATIV_BIRALAT" or hf.allapot == "MINDEN_BIRALAT_POZITIV" %}Elbírálva{% else %}Bírálat{% if hf.allapot == "NINCS_BIRALAT"%} folyamatban{% endif %}{% endif %}</li>
+                    {% if hf.allapot == "VAN_NEGATIV_BIRALAT" %}
+                        <li class="step step-error">Hibajavítás</li>
+                    {% endif %}
+                    <li class="step {% if hf.allapot == "MINDEN_BIRALAT_POZITIV" %} step-success {% endif %}">Kész</li>
+                  </ul>
+                <h1 class="card-title text-center mt-5">{{ hf.kituzes.feladat.nev }}
+                    {% if hf.allapot == "NINCS_REPO" %}
+                    <div class="badge badge-info">A feladat repóra vár</div>
+                    {% elif hf.allapot == "NINCS_MO" %}
+                    <div class="badge badge-info">A feladat megoldásra vár</div>
+                    {% elif hf.allapot == "NINCS_BIRALAT" %}
+                    <div class="badge badge-warning">A feladat bírálatra vár</div>
+                    {% elif hf.allapot == "VAN_NEGATIV_BIRALAT" %}
+                    <div class="badge badge-error">A mentoráltnak ki kell javítania a hibákat</div>
+                    {% elif hf.allapot == "MINDEN_BIRALAT_POZITIV" %}
+                    <div class="badge badge-success">A feladat sikeresen lezárva</div>
+                    {% endif %}
+                </h1>
+                <h2><span class="font-bold">Határidő: </span>{{ hf.hatarido|hn }} {% if hf.hatarideje_lejart %} <div class="badge badge-error">Lejárt</div>{% endif %}</h2>
+                <a href="{{ hf.kituzes.feladat.url }}" target="_blank" class="btn btn-primary w-60">Feladatleírás megtekintése</a>
+            </div>
+        </div>
+        <div class="card w-full sm:w-4/5 md:w-6/12 bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h1 class="card-title text-center">Megoldás beküldése és visszajelzés</h1>
+                <div class="chat flex flex-col h-40 overflow-scroll">
+                    {% for mobir in megoldasok_es_biralatok %}
+                        {% if mobir.megoldas %}
+                            <div class="chat chat-end">
+                                <div class="chat-image avatar">
+                                    <div class="w-10 rounded-full">
+                                        <img src="https://ui-avatars.com/api/?name={{ mobir.tartalom.hf.user.last_name }}+{{ mobir.tartalom.hf.user.first_name }}&background=random" alt="Mentorált avatar">
+                                    </div>
+                                </div>
+                                <div class="chat-header">
+                                    {{ mobir.tartalom.hf.user.last_name }} {{ mobir.tartalom.hf.user.first_name }}
+                                    <time class="text-xs opacity-50">{{ mobir.tartalom.ido|ehnopegesz }}</time>
+                                </div>
+                                <div class="chat-bubble w-60">
+                                    {{ mobir.tartalom.szoveg }}
+                                </div>
+
+                            </div>
+                        {% else %}
+                            <div class="chat chat-start">
+                                <div class="chat-image avatar">
+                                    <div class="w-10 rounded-full">
+                                        <img src="https://ui-avatars.com/api/?name={{ mobir.tartalom.mentor.last_name }}+{{ mobir.tartalom.mentor.first_name }}&background=random" alt="Mentor avatar">
+                                    </div>
+                                </div>
+                                <div class="chat-header">
+                                    {{ mobir.tartalom.mentor.last_name }} {{ mobir.tartalom.mentor.first_name }}
+                                    <time class="text-xs opacity-50">{{ mobir.tartalom.ido|ehnopegesz }}</time>
+                                </div>
+                                <div class="chat-bubble w-60">
+                                    {{ mobir.tartalom.szoveg }}
+                                    <br>
+                                    <div class="badge {% if mobir.tartalom.itelet == "Hiányos" %}badge-error{% endif %}">{{ mobir.tartalom.itelet }}</div>
+                                </div>
+                                {% if mentor_vagyok and user == mobir.tartalom.mentor %}
+                                <button class="chat-footer link link-error opacity-50 biralatot_torol" value="{{ mobir.tartalom.id }}">
+                                    Bírálat törlése
+                                </button>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% comment %} Üzenőbemenet {% endcomment %}
+                    {% if mentoralt_vagyok and uj_megoldast_adhatok_be %}
+                        <label class="form-control">
+                            <div class="label">
+                                <span class="label-text">Megoldás</span>
+                            </div>
+                            <textarea name="mo-editor-textarea" id="mo-editor-textarea" rows="1" placeholder="Új megoldás beküldése" class="textarea textarea-bordered h-10"></textarea>
+                        </label>
+                    {% elif mentoralt_vagyok %}
+                        <label class="form-control">
+                            <div class="label">
+                                <span class="label-text">Megoldás</span>
+                            <textarea name="mo-editor-textarea" id="mo-editor-textarea" rows="1" placeholder="Új megoldás beküldéséhez frissítsd a Github linket!" class="textarea textarea-bordered h-10"></textarea>
+                            <div class="btn btn-primary join-item w-3/12" id="bead">
+                                <span class="input-group-text send_btn"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="black" class="bi bi-send-fill" viewBox="0 0 16 16">
+                                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                                  </svg></span>
+                            </div>
+                        </label>
+                    {% endif %}
+                        
+                    {% if mentor_vagyok and uj_biralatot_rogzithetek %}
+                        <div class="join sendarea flex w-full">
+                            <label class="form-control w-5/6 join-item ">
+                                <div class="label">
+                                    <span class="label-text">Megoldás</span>
+                                </div>
+                                <textarea id="bi-editor-textarea" id="bi-editor-textarea" rows="1" placeholder="Új mentorálás rögzítése" class="textarea textarea-bordered h-10"></textarea>
+                            </label>
+                            <label class="form-control w-2/6 join-item">
+                                <div class="label">
+                                    <span class="label-text">Bírálat</span>
+                                </div>
+                                <div class="flex">
+                                    <select id="bi-itelet-select" onselect="szinezes()" class="select select-bordered w-full">
+                                        <option value="" disabled selected>Válassz bírálatot</option>
+                                        <option value="Elfogadva">Elfogadva</option>
+                                        <option value="Hibás">Hibás</option>
+                                        <option value="Hiányos">Hiányos</option>
+                                        <option value="Értékelhetetlen">Értékelhetetlen</option>
+                                    </select>
+                                    <div class="btn btn-secondary join-item w-3/12" id="biral">
+                                        <span class="input-group-text send_btn"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="black" class="bi bi-send-fill" viewBox="0 0 16 16">
+                                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                                          </svg></span>
+                                    </div>
+                                </div>
+                            </label>
+
+                            </div>
+                        </div>
+                    {% endif %}
+
+            </div>
+        </div>
+    </main>
+
+
+    {% include "footer.html" %}
+
+</body>
+</html>
