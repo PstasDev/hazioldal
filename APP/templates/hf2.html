@@ -1,5 +1,6 @@
 {% load static %}
 {% load repofilterek %}
+{% load auth_extras %}
 
 <!DOCTYPE html>
 <html lang="hu">
@@ -43,7 +44,7 @@
                     {% endif %}
                 </h1>
                 <h2><span class="font-bold">Határidő: </span>{{ hf.hatarido|hn }} {% if hf.hatarideje_lejart %} <div class="badge badge-error">Lejárt</div>{% endif %}</h2>
-                <a href="{{ hf.kituzes.feladat.url }}" target="_blank" class="btn btn-primary w-60">Feladatleírás megtekintése</a>
+                <a href="{{ hf.kituzes.feladat.url }}" target="_blank" class="btn {% if mentoralt_vagyok %} btn-primary {% else %} btn-secondary {% endif %} w-60">Feladatleírás megtekintése</a>
             </div>
         </div>
         <div class="card w-full sm:w-4/5 md:w-6/12 bg-base-100 shadow-xl">
@@ -62,7 +63,7 @@
                                     {{ mobir.tartalom.hf.user.last_name }} {{ mobir.tartalom.hf.user.first_name }}
                                     <time class="text-xs opacity-50">{{ mobir.tartalom.ido|ehnopegesz }}</time>
                                 </div>
-                                <div class="chat-bubble w-60">
+                                <div class="chat-bubble min-w-60 max-w-80 text-pretty break-words">
                                     {{ mobir.tartalom.szoveg }}
                                 </div>
 
@@ -75,13 +76,22 @@
                                     </div>
                                 </div>
                                 <div class="chat-header">
+                                    {% if mobir.tartalom.mentor|has_group:"tanar" %}
+                                        <div class="badge badge-accent badge-xs">
+                                            Tanár
+                                        </div>
+                                    {% else %}
+                                        <div class="badge badge-secondary badge-xs">
+                                            Mentor
+                                        </div>
+                                    {% endif %}
                                     {{ mobir.tartalom.mentor.last_name }} {{ mobir.tartalom.mentor.first_name }}
                                     <time class="text-xs opacity-50">{{ mobir.tartalom.ido|ehnopegesz }}</time>
                                 </div>
-                                <div class="chat-bubble w-60">
+                                <div class="chat-bubble min-w-60 max-w-80 text-pretty break-words">
                                     {{ mobir.tartalom.szoveg }}
                                     <br>
-                                    <div class="badge {% if mobir.tartalom.itelet == "Hiányos" %}badge-error{% endif %}">{{ mobir.tartalom.itelet }}</div>
+                                    <div class="badge {% if mobir.tartalom.itelet == "Hiányos" %} badge-warning {% elif mobir.tartalom.itelet == "Hibás" %} badge-warning {% elif mobir.tartalom.itelet == "Elfogadva" %} badge-success {% elif mobir.tartalom.itelet == "Értékelhetetlen" %} badge-error {% endif %}">{{ mobir.tartalom.itelet }}</div>
                                 </div>
                                 {% if mentor_vagyok and user == mobir.tartalom.mentor %}
                                 <button class="chat-footer link link-error opacity-50 biralatot_torol" value="{{ mobir.tartalom.id }}">
@@ -95,23 +105,28 @@
 
                 {% comment %} Üzenőbemenet {% endcomment %}
                     {% if mentoralt_vagyok and uj_megoldast_adhatok_be %}
-                        <label class="form-control">
+                        <label class="form-control flex flex-col">
                             <div class="label">
                                 <span class="label-text">Megoldás</span>
                             </div>
                             <textarea name="mo-editor-textarea" id="mo-editor-textarea" rows="1" placeholder="Új megoldás beküldése" class="textarea textarea-bordered h-10"></textarea>
                         </label>
                     {% elif mentoralt_vagyok %}
-                        <label class="form-control">
-                            <div class="label">
-                                <span class="label-text">Megoldás</span>
-                            <textarea name="mo-editor-textarea" id="mo-editor-textarea" rows="1" placeholder="Új megoldás beküldéséhez frissítsd a Github linket!" class="textarea textarea-bordered h-10"></textarea>
-                            <div class="btn btn-primary join-item w-3/12" id="bead">
-                                <span class="input-group-text send_btn"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="black" class="bi bi-send-fill" viewBox="0 0 16 16">
-                                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
-                                  </svg></span>
-                            </div>
-                        </label>
+                        <div class="join sendarea flex w-full">
+                            <label class="form-control w-5/6">
+                                <div class="flex">
+                                    <div class="label">
+                                        <span class="label-text">Megoldás</span>
+                                    </div>
+                                    <textarea name="mo-editor-textarea" id="mo-editor-textarea" rows="1" disabled placeholder="Új megoldás beküldéséhez frissítsd a Github linket!" class="textarea textarea-bordered h-10 join-item"></textarea>
+                                    <div class="btn btn-primary join-item w-3/12" id="bead" disabled>
+                                        <span class="input-group-text send_btn"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="black" class="bi bi-send-fill" viewBox="0 0 16 16">
+                                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                                        </svg></span>
+                                    </div>    
+                                </div>
+                            </label>
+                        </div>
                     {% endif %}
                         
                     {% if mentor_vagyok and uj_biralatot_rogzithetek %}

@@ -76,7 +76,7 @@ def hf(request:HttpRequest, hfid:int) -> HttpResponse:
         'github_key' : local_settings.GITHUB_KEY,
         'APP_URL_LABEL' : APP_URL_LABEL,
     }
-    return render(request, 'hf.html', context)
+    return render(request, 'hf2.html', context)
 
 def SajatResponse(request:HttpRequest, uzenet:str="", status:int=None) -> HttpResponse:
     # hibakezelés, ha fura kwargs argumentumot adnak meg
