@@ -25,7 +25,7 @@ env\Scripts\activate.bat
 4. Futtasd le a következő parancsot, a könyvtárak telepítéséhez, megfelelő ellenőrzés után
 **Ellenőrizd**, hogy Windows rendszeren a `psycopg2-binary` könyvtár ki van e kommentelve a requirements fájlban, Linuxon `psycopg2`.
 ```shell
-pip install -r requirements.txt
+pip install -r requirements.txt --no-input --ignore-installed
 ```
 5. Nevezd át a `example_local_settings.py` fájlt `local_settings.py`-ra
 6. Generálj egy secret key-t (opcionális, de ajánlott)
