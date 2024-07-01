@@ -1,5 +1,9 @@
 # Security Policy
 
+## Version support
+
+This software is open-source but is being made for a specific group of people and because we are satisfying specifically their user experience, we can't guarantee that the software gets security updates regularly.
+
 ## Reporting a Vulnerability
 
 We take the security of our project seriously and appreciate your help in identifying any vulnerabilities. 
