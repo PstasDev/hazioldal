@@ -35,11 +35,9 @@ env\Scripts\activate.bat
 pip install -r requirements.txt --no-input --ignore-installed
 ```
 5. Nevezd át a `example_local_settings.py` fájlt `local_settings.py`-ra
-6. Generálj egy secret key-t (opcionális, de ajánlott)
+6. Generálj egy secret key-t, az alábbi parancs terminálban történő futtatásával (opcionális, de ajánlott)
 ```shell
-django-admin shell
-from django.core.management.utils import get_random_secret_key
-get_random_secret_key()
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 7. Másold be a `local_settings.py` megfelelő változójába (opcionális, de ajánlott)
 ```py
