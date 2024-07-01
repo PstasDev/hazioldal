@@ -59,15 +59,18 @@ Ezzel a telepítéssel már dolgozhatsz az alábbi témákban:
 > - E-mailek küldése (local_settings-ben be kell állítani)
 
 #### Example database (sqlite)
+A repository tartalmaz egy példaadatbázist, amelyet példaadatokkal töltöttünk fel. Ez egy kis adatbázis, nem arra szolgál, hogy nagymennyiségű adatot hogyan dolgoz fel a rendszer, kizárólag a működéshez legszükségesebb adatokat tartalmazza.
+
 1 mentor, 1 mentorált
 1 adminisztrátor-tanár
 4 mintafeladat
 2 témakörben
 
-| Felhasználó jellege | Mentorált        | Mentor             | Adminisztrátor-tanár |
-|---------------------|------------------|--------------------|----------------------|
-| username            | kisdiak_moriczka | nagymentor_pistike | admin                |
-| password            | moriczka123      | pistike123         | admin                |
+| Felhasználó jellege   | Felhasználó        | Jelszó      |
+|-----------------------|--------------------|-------------|
+| Adminisztrátor-tanár  | admin              | admin       |
+| Mentor                | nagymentor_pistike | pistike123  |
+| Mentorált             | kisdiak_moriczka   | moriczka123 |
 
 ## Haladó közreműködés
 
