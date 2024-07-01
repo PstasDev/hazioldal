@@ -31,8 +31,11 @@ def ez_a_tanev():
         return most.year
     return most.year-1
 
+# A következő 2 functionben azért van ez a két komment, mert szerintem így kellene kiszámolni, de nem tudom, hogy a régi kódok hogyan működnek, ezért nem mertem megváltoztatni
 def evnyito(ev:int):
     return datetime(year=ev, month=9, day=1)
+    # return datetime(year=ev-1, month=9, day=1) if datetime.now().month < 9 else datetime(year=ev, month=9, day=1)
 
 def kov_evnyito(ev:int):
     return datetime(year=ev+1, month=9, day=1)
+    # return datetime(year=ev+1, month=9, day=1) if datetime.now().year == evnyito(ev).year else datetime(year=ev, month=9, day=1)
