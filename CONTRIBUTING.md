@@ -3,7 +3,7 @@
 Olvasd végig ezt az útmutatót, ha meg szeretnéd tudni, hogy hogyan tudsz hozzájárulni érdemben a házioldal fejlesztéséhez.
 
 ## Git guide
-Ne commitolj az upstream repo-ba. Forkold a [MolnAtt/hazioldal](https:/github.com/MolnAtt/hazioldal) repo-t és az ott eszközölt commitok létrejöttével nyiss egy pull requestet.
+Ne commitolj az upstream repo-ba! Forkold a [MolnAtt/hazioldal](https:/github.com/MolnAtt/hazioldal) repo-t és az ott eszközölt commitok létrejöttével nyiss egy pull requestet.
 
 > [!WARNING]
 > Ha nem egy kisebb frontend hibát javítasz, akkor mindenképpen teszteld le egy devszerveren, hogy működik-e a módosításod! Ha lehet, akkor csatolj screenshotokat a pull request leírásában vagy alatta kommentben.
@@ -68,3 +68,12 @@ Ezzel a telepítéssel már dolgozhatsz az alábbi témákban:
 |---------------------|------------------|--------------------|----------------------|
 | username            | kisdiak_moriczka | nagymentor_pistike | admin                |
 | password            | moriczka123      | pistike123         | admin                |
+
+## Haladó közreműködés
+
+>[!WARNING]
+> Jelenleg nem létezik fejlesztőink által kibocsátott útmutató erre a kifejezett projekthez, ami megmondaná például, hogy hogyan lehet teljeskörű devszervert beállítani.
+>
+> Amennyiben mégis szeretnéd ezeket a funkciókat igénybe venni, a legjobb tanácsunk az, hogy találd fel magad és próbáld meg beállítani a PostgreSQL adatbázis magad.
+>
+> Ha pedig rendkívül jófejnek érzed magad, készítsd el ezen útmutató folytatását :D
