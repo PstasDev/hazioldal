@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 from django.utils import timezone as tz
 from django.utils import dateformat
 from APP.seged import ez_a_tanev, evnyito, kov_evnyito
+from github import Github, Auth
 
 def ki(s,v):
     print(f'{s} \t= \t{v}')
@@ -107,6 +108,10 @@ class Git(models.Model):
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     platform = models.CharField(max_length=255)
+
+    github_token = models.CharField(max_length=300, blank=True, null=True)
+    commithistory = models.BooleanField(default=False)
+
     count_of_nincs_repo = models.IntegerField(default=0)
     count_of_nincs_mo = models.IntegerField(default=0)
     count_of_nincs_biralat = models.IntegerField(default=0)
@@ -399,12 +404,38 @@ class Hf(models.Model):
                 hetibontas[het] = [a_hf]
         return dict(sorted(hetibontas.items(), key= lambda kv : kv[1][0].hatarido))
 
-    def megoldasai_es_biralatai(a_hf):
+    def megoldasai_es_biralatai(a_hf, reponev=None):
         result = []
-        for a_mo in Mo.objects.filter(hf=a_hf).order_by('ido'):
-            result.append({'megoldas': True, 'tartalom':a_mo})
-            result += [{'megoldas': False, 'tartalom':b} for b in Biralat.objects.filter(mo=a_mo).order_by('ido')]
-        return result
+        for a_mo in Mo.objects.filter(hf=a_hf):
+            result.append({'megoldas': 'megoldas', 'tartalom': a_mo, 'ido': tz.make_aware(a_mo.ido)})
+            result += [{'megoldas': 'biralat', 'tartalom': b, 'ido': tz.make_aware(b.ido)} for b in Biralat.objects.filter(mo=a_mo)]
+
+        commits = []
+
+        hiba = None
+        if a_hf.user.git.commithistory and reponev:
+            try:
+                auth = Auth.Token(a_hf.user.git.github_token)
+                g = Github(auth=auth)
+
+                repo = g.get_repo(reponev.split("https://github.com/")[1].split(".git")[0])
+                commitok = repo.get_commits()
+                for commit in commitok:
+                    commits.append({"megoldas": "commit", "ido": commit.commit.committer.date, "message": commit.commit.message})
+            except Exception as e:
+                hiba = e
+
+        combined_result = result + commits
+
+        combined_result.sort(key=lambda x: x['ido'])
+        if hiba:
+            combined_result.append(
+                {
+                    'hiba': hiba,
+                    'megoldas': 'hiba',
+                }
+            )
+        return combined_result
 
     def update_allapot(a_hf) -> str:
         """
@@ -485,7 +516,7 @@ class Hf(models.Model):
 
     def hatarideje_lejart(a_hf):
         h = a_hf.hatarido
-        return tz.make_aware(datetime(h.year, h.month, h.day) + timedelta(1))  < tz.now()
+        return tz.make_aware(datetime(h.year, h.month, h.day) + timedelta(1))  < tz.make_aware(tz.now())
     
     def nek_nincs_ertekelheto_megoldasa(a_hf):
         '''
